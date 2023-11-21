@@ -20,6 +20,9 @@
       padding: 10px;
       cursor: pointer;
     }
+    label {
+      margin-right: 5px;
+    }
   </style>
 </head>
 <body>
@@ -27,32 +30,74 @@
 <input type="text" id="outputField" placeholder="Type here">
 
 <div>
-  <button data-text="[x]" data-key="Digit1">[x]</button>
-  <button data-text=".x" data-key="Digit2">.x</button>
-  <button data-text="#x" data-key="Digit3">#x</button>
-  <button data-text=":contains(x)" data-key="Digit4">:contains(x)</button>
-  <button data-text=":has(x)" data-key="Digit5">:has(x)</button>
-  <button data-text=":eq(p)" data-key="Digit6">:eq(p)</button>
-  <button data-text=":first" data-key="Digit7">:first</button>
-  <button data-text=":last" data-key="Digit8">:last</button>
-  <button data-text=":visible" data-key="Digit9">:visible</button>
-  <button data-text=":checked" data-key="Digit0">:checked</button>
-  <button data-text=" " data-key="Minus">" "</button>
-  <button data-text="+" data-key="Equal">+</button>
+  <label for="copyButton">(`)</label>
+  <button id="copyButton" data-key="Backquote">Copy to Clipboard</button>
+
+  <label for="button1">(1)</label>
+  <button id="button1" data-text="[x]" data-key="Digit1">[x]</button>
+
+  <label for="button2">(2)</label>
+  <button id="button2" data-text=".x" data-key="Digit2">.x</button>
+
+  <label for="button3">(3)</label>
+  <button id="button3" data-text="#x" data-key="Digit3">#x</button>
+
+  <label for="button4">(4)</label>
+  <button id="button4" data-text=":contains(x)" data-key="Digit4">:contains(x)</button>
+
+  <label for="button5">(5)</label>
+  <button id="button5" data-text=":has(x)" data-key="Digit5">:has(x)</button>
+
+  <label for="button6">(6)</label>
+  <button id="button6" data-text=":eq(p)" data-key="Digit6">:eq(p)</button>
+
+  <label for="button7">(7)</label>
+  <button id="button7" data-text=":first" data-key="Digit7">:first</button>
+
+  <label for="button8">(8)</label>
+  <button id="button8" data-text=":last" data-key="Digit8">:last</button>
+
+  <label for="button9">(9)</label>
+  <button id="button9" data-text=":visible" data-key="Digit9">:visible</button>
+
+  <label for="button0">(10)</label>
+  <button id="button0" data-text=":checked" data-key="Digit0">:checked</button>
+
+  <label for="buttonEqual">(-)</label>
+  <button id="buttonEqual" data-text="+" data-key="Minus">+</button>
+
+  <label for="buttonBackslash">(=)</label>
+  <button id="buttonBackslash" data-text=" " data-key="Equal">" "</button>
+
+  <label for="buttonBackspace">(Backspace)</label>
+  <button id="buttonBackspace" data-key="Backspace">Backspace</button>
 </div>
+
 
 <script>
   const outputField = document.getElementById('outputField');
   const buttons = document.querySelectorAll('button');
+  const copyButton = document.getElementById('copyButton');
+  const backspaceButton = document.getElementById('buttonBackspace');
 
   buttons.forEach(button => {
     button.addEventListener('click', () => appendText(button.getAttribute('data-text')));
   });
 
+  copyButton.addEventListener('click', copyToClipboard);
+
+  backspaceButton.addEventListener('click', clearInput);
+
   document.addEventListener('keydown', (event) => {
     const key = event.code;
     const button = Array.from(buttons).find(b => b.getAttribute('data-key') === key);
-    if (button) {
+    if (key === 'Backquote') {
+      event.preventDefault();
+      copyToClipboard();
+    } else if (key === 'Backspace') {
+      event.preventDefault();
+      clearInput();
+    } else if (button) {
       event.preventDefault(); // Prevent default behavior (e.g., typing into an input field)
       appendText(button.getAttribute('data-text'));
     }
@@ -72,6 +117,16 @@
       // Append regular text to the input field
       outputField.value += text;
     }
+  }
+
+  function copyToClipboard() {
+    outputField.select();
+    document.execCommand('copy');
+    alert('Text copied to clipboard!');
+  }
+
+  function clearInput() {
+    outputField.value = '';
   }
 </script>
 
