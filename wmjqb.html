@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Button Copy</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    input {
+      width: 300px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    button {
+      margin: 5px;
+      padding: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<input type="text" id="outputField" placeholder="Type here">
+
+<div>
+  <button data-text="[x]" data-key="Digit1">[x]</button>
+  <button data-text=".x" data-key="Digit2">.x</button>
+  <button data-text="#x" data-key="Digit3">#x</button>
+  <button data-text=":contains(x)" data-key="Digit4">:contains(x)</button>
+  <button data-text=":has(x)" data-key="Digit5">:has(x)</button>
+  <button data-text=":eq(p)" data-key="Digit6">:eq(p)</button>
+  <button data-text=":first" data-key="Digit7">:first</button>
+  <button data-text=":last" data-key="Digit8">:last</button>
+  <button data-text=":visible" data-key="Digit9">:visible</button>
+  <button data-text=":checked" data-key="Digit0">:checked</button>
+  <button data-text=" " data-key="Minus">" "</button>
+  <button data-text="+" data-key="Equal">+</button>
+</div>
+
+<script>
+  const outputField = document.getElementById('outputField');
+  const buttons = document.querySelectorAll('button');
+
+  buttons.forEach(button => {
+    button.addEventListener('click', () => appendText(button.getAttribute('data-text')));
+  });
+
+  document.addEventListener('keydown', (event) => {
+    const key = event.code;
+    const button = Array.from(buttons).find(b => b.getAttribute('data-key') === key);
+    if (button) {
+      event.preventDefault(); // Prevent default behavior (e.g., typing into an input field)
+      appendText(button.getAttribute('data-text'));
+    }
+  });
+
+  function appendText(text) {
+    if (text.includes('x')) {
+      // Replace 'x' with text from clipboard
+      navigator.clipboard.readText().then(clipboardText => {
+        outputField.value += text.replace('x', clipboardText);
+      });
+    } else if (text.includes('p')) {
+      // Replace 'p' with user prompt
+      const userInput = prompt('Enter value for "p":');
+      outputField.value += text.replace('p', userInput);
+    } else {
+      // Append regular text to the input field
+      outputField.value += text;
+    }
+  }
+</script>
+
+</body>
+</html>
+
